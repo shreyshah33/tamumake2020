@@ -1,31 +1,20 @@
-import numpy as np
 import cv2
+import os
+import numpy as np
+from PIL import ImageGrab
+import time
+cam = cv2.VideoCapture(0)
 
-cap = cv2.VideoCapture(0) # Capture video from camera
+# cv2.namedWindow("test")
 
-# Get the width and height of frame
-width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH) + 0.5)
-height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT) + 0.5)
+img_counter = 0
 
-# Define the codec and create VideoWriter object
-fourcc = cv2.VideoWriter_fourcc(*'mp4v') # Be sure to use the lower case
-out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (width, height))
+while True:
+    ret, frame = cam.read()
+    img_name = "opencv_frame_1.jpg"
+    cv2.imwrite(img_name, frame)
+    time.sleep(0.03)
 
-while(cap.isOpened()):
-    ret, frame = cap.read()
-    if ret == True:
-        frame = cv2.flip(frame,0)
+cam.release()
 
-        # write the flipped frame
-        out.write(frame)
-
-        cv2.imshow('frame',frame)
-        if (cv2.waitKey(1) & 0xFF) == ord('q'): # Hit `q` to exit
-            break
-    else:
-        break
-
-# Release everything if job is finished
-out.release()
-cap.release()
-cv2.destroyAllWindows()
+# cv2.destroyAllWindows()
