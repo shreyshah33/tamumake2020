@@ -1,0 +1,18 @@
+.target_emotion {
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.hide_emotion {
+    display: none;
+}
