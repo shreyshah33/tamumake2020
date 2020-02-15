@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" href='/public/index.css'>
+        <script src='/public/index.js'></script>
+    </head>
+    <body onload="startImageUpdate();">
+        <div class="container">
+            {% for emotion in emotions %}
+            <img id={{emotion}} class='hide_emotion' src='/public/images/{{emotion}}.png'>
+            {% endfor %}
+        </div>
+    </body>
+</html>
