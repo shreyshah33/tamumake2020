@@ -1,11 +1,6 @@
 import cv2
-import os
-import numpy as np
-from PIL import ImageGrab
-import time
+from time import sleep
 cam = cv2.VideoCapture(0)
-
-# cv2.namedWindow("test")
 
 img_counter = 0
 
@@ -13,8 +8,7 @@ while True:
     ret, frame = cam.read()
     img_name = "opencv_frame_1.jpg"
     cv2.imwrite(img_name, frame)
-    time.sleep(0.03)
+    sleep(0.1)
 
 cam.release()
 
-# cv2.destroyAllWindows()
