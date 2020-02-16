@@ -11,12 +11,11 @@ function startImageUpdate() {
         if (emotion_call.ok) {
             var emo = await emotion_call.json();
             targetEmotion = emo.emotion;
-            console.log(emo.emotion);
         }
 
         for (let emotion of emotions) {
             if (emotion !== targetEmotion) {
-                document.querySelector(`#${emotion}`).className = "hide_emotion";
+                document.querySelector(`#${emotion}`).className = "hidden";
             }
         }
 
@@ -27,3 +26,4 @@ function startImageUpdate() {
 
     setInterval(changeImage, UPDATE_TIME);
 }
+
