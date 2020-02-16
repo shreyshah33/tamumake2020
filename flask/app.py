@@ -3,6 +3,8 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import json
+from google.cloud import storage
+
 
 cred = credentials.Certificate('key2.json')
 firebase_admin.initialize_app(cred)
@@ -42,6 +44,24 @@ def initiate():
 def deactivate():
     firestore_document.update({"start": False})
     return "deactivating"
+
+@app.route('/pillstaken')
+def pillstaken():
+    firestore_document.update({"pills": True})
+
+@app.route('/pillsreset')
+def pillsreset():
+    firestore_document.update({"pills": False})
+
+@app.route('/orderadd', methods=['POST'])
+def add():
+    data = firestore_document.get().to_dict()
+    if 'order' in data:
+        data['order'].append((str(json.loads(request.get_data())["order"])))
+        data['order'].append((int(json.loads(request.get_data())["quantity"])))
+        firestore_document.update({"order": data['order']})
+    else:
+        firestore_document.update({"order": [(str(json.loads(request.get_data())["order"])), (int(json.loads(request.get_data())["quantity"]))]})
 
 # Run on localhost if targeted by flask
 if __name__ == "__main__":

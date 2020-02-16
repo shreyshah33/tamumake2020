@@ -29,7 +29,6 @@ def upload_blob():
     blob = bucket.blob("image1.jpg")
 
     blob.upload_from_filename("opencv_frame_1.jpg")
-from google.cloud import storage
 
 
 def download_blob():
