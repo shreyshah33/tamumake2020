@@ -6,6 +6,12 @@ from google.cloud import storage
 import json
 import requests
 
+from google.cloud import storage
+import smtplib
+import imaplib
+import email
+from email.mime.text import MIMEText
+
 cred = credentials.Certificate('key2.json')
 firebase_admin.initialize_app(cred)
 db = firestore.client()
@@ -51,6 +57,53 @@ def initiate():
 def deactivate():
     firestore_document.update({"start": False})
     return "deactivating"
+
+@app.route('/pillstaken')
+def pillstaken():
+    firestore_document.update({"pills": True})
+    return 'taken'
+
+@app.route('/pillsreset')
+def pillsreset():
+    firestore_document.update({"pills": False})
+    return 'reset'
+
+@app.route('/orderadd', methods=['POST'])
+def add():
+    data = firestore_document.get().to_dict()
+    if 'order' in data:
+        data['order'].append((str(json.loads(request.get_data())["order"])))
+        data['order'].append((int(json.loads(request.get_data())["quantity"])))
+        firestore_document.update({"order": data['order']})
+
+@app.route('/orderdone')
+def done():
+    orders = firestore_document.get().to_dict()['order']
+    text_to_send = "Order Placed for the following: "
+    for i in range(len(orders)):
+        text_to_send += str(orders[i])
+        if i % 2 == 0:
+            text_to_send += "    "
+        else:
+            text_to_send += "\n"
+    print(text_to_send)
+    msg = MIMEText("this is text")
+    msg['From'] = "shreyshah33@gmail.com"
+    msg['To'] = "dillon.fisher.14@tamu.edu"
+    msg['Subject'] = "GROCERY ORDER PLACED"
+    sent_from = "shreyshah33@gmail.com"  
+    to = "dillon.fisher.14@tamu.edu" 
+    body = text_to_send
+    print("smp")
+    s = smtplib.SMTP('smtp.gmail.com', 587)
+
+    print("smp loaded")
+    s.ehlo()
+    s.starttls()
+    s.login("initiatefriend@gmail.com", "TamuMake123")
+    s.send_message(msg)
+    s.close()
+    return 'Email sent!'
 
 # Run on localhost if targeted by flask
 if __name__ == "__main__":

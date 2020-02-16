@@ -29,7 +29,6 @@ def upload_blob():
     blob = bucket.blob("image1.jpg")
 
     blob.upload_from_filename("opencv_frame_1.jpg")
-from google.cloud import storage
 
 
 def download_blob():
@@ -68,7 +67,16 @@ def detect_face(face_file, max_results=4):
 
         roll = int(data[0].roll_angle + 90)
         pan = int(-data[0].pan_angle + 90)
-        tilt = int((-(data[0].tilt_angle)+30)*2.3)
+        if pan < 20:
+            pan=20
+        elif pan > 100:
+            pan = 100
+        tilt = int((-(data[0].tilt_angle) + 30) * 1.5)
+        if tilt < 20:
+            tilt = 20
+        elif tilt > 100:
+            tilt = 100
+            
         print(data[0].tilt_angle)
         send_data = {
             "emotion": max_key(emotions),
@@ -90,5 +98,5 @@ if __name__ == "__main__":
             file_name = "/Users/shreyshah/Projects/tamumake2020/opencv_frame_1.jpg"
             with open(file_name, 'rb') as image:
                 detect_face(image)
-            upload_blob()
+            # upload_blob()
             time.sleep(0.33)
