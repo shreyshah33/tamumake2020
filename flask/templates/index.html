@@ -3,21 +3,38 @@
     <head>
         <link rel="stylesheet" href='/public/index.css'>
         <script src='/public/index.js'></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet"> 
     </head>
     <body onload="startImageUpdate();">
-        <iframe 
-            width="560"
-            height="315"
-            src="https://www.youtube.com/embed/{{stream}}"
-            frameborder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen
-        >
-        </iframe>
+        <!-- Pill Note -->
+        <div id='pillnote' class="hidden">
+            <img src='/public/images/pills.png' width="280px" height="auto" />
+            <h1>Alert: You need to take your medication.</h1>
+        </div>
+        <!-- Video Stream -->
+        <div id='video' class='hidden'>
+            <iframe
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/{{stream}}?rel=0;&autoplay=1"
+                frameborder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+            >
+            </iframe>
+        </div>
         <div class="container">
             {% for emotion in emotions %}
             <img id={{emotion}} class='hidden' src='/public/images/{{emotion}}.png'>
             {% endfor %}
+        </div>
+        <!-- Main Content -->
+        <div id='weather'>
+            <h1 id='condition'>Clear</h1>
+            <h3>College Station</h3>
+            <h2 id='temp'>60</h2>
+        </div>
+        <div id='shopholder' class='hidden'>
+            <ul id='shoppingList'></ul>
         </div>
     </body>
 </html>

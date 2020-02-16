@@ -4,6 +4,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from google.cloud import storage
 import json
+import requests
 
 cred = credentials.Certificate('key2.json')
 firebase_admin.initialize_app(cred)
@@ -17,34 +18,31 @@ emotions = ['joy', 'surprise', 'angry', 'sorrow']
 
 @app.route('/')
 def index():
-    return render_template('index.html', emotions=emotions, stream='9lM0D-1qoFo')
+    return render_template('index.html', emotions=emotions, stream='4u4E6uIVkKw')
 
 # Serve static files from public folder
 @app.route('/public/<path:path>')
 def send_public(path):
     return send_from_directory('public', path)
 
+# Proxies BC cross origin
+@app.route('/api/weather')
+def weather():
+    return jsonify(**requests.get('https://api.darksky.net/forecast/a47170938046286e71352254ae0ccc97/30.622104,-96.339161').json())
+
 @app.route('/api/guiUpdate')
 def guiUpdate():
     # PUT YOUR CODE IN HERE 
     request = firestore_document.get().to_dict()
-    
-    emotion = request["emotion"]
-    pills_taken = request['pillstaken']
-    
 
-    return jsonify(emotion = emotion)
+    print(request)
 
-@app.route('/api/pillsTaken')
-def pills():
-    pills = firestore_document.get().to_dict()['pillsTaken']
-    return jsonify(pills=pills)
-
+    return jsonify(**request)
 
 @app.route('/initiate', methods=['POST'])
 def initiate():
     d = json.loads(request.get_data())['initiate']
-    if d== 'true':
+    if d == 'true':
         firestore_document.update({"start": True})
         return "got it"
     return "wrong input"
