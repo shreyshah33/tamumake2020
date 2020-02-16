@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, send_from_directory, render_template
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+import json
 
 cred = credentials.Certificate('key2.json')
 firebase_admin.initialize_app(cred)
@@ -28,6 +29,19 @@ def emotion():
     emotion = firestore_document.get().to_dict()["emotion"]
     return jsonify(emotion= emotion)
     # return {}
+
+@app.route('/initiate', methods=['POST'])
+def initiate():
+    d = json.loads(request.get_data())['initiate']
+    if d== 'true':
+        firestore_document.update({"start": True})
+        return "got it"
+    return "wrong input"
+
+@app.route('/deactivate')
+def deactivate():
+    firestore_document.update({"start": False})
+    return "deactivating"
 
 # Run on localhost if targeted by flask
 if __name__ == "__main__":
