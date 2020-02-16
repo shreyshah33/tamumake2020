@@ -5,9 +5,18 @@
         <script src='/public/index.js'></script>
     </head>
     <body onload="startImageUpdate();">
+        <iframe 
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/{{stream}}"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen
+        >
+        </iframe>
         <div class="container">
             {% for emotion in emotions %}
-            <img id={{emotion}} class='hide_emotion' src='/public/images/{{emotion}}.png'>
+            <img id={{emotion}} class='hidden' src='/public/images/{{emotion}}.png'>
             {% endfor %}
         </div>
     </body>
