@@ -1,5 +1,6 @@
 from google.cloud import vision
 from google.cloud.vision import types
+from google.cloud import storage
 from PIL import Image, ImageDraw
 from datetime import datetime
 import numpy as np
@@ -19,6 +20,26 @@ cred = credentials.Certificate('key2.json')
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 firestore_document = db.collection('face_follower').document('face_data') 
+
+
+def upload_blob():
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket("image-uploaded")
+    blob = bucket.blob("image1.jpg")
+
+    blob.upload_from_filename("opencv_frame_1.jpg")
+from google.cloud import storage
+
+
+def download_blob():
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket("image-uploaded")
+
+    blob = bucket.blob("image1.jpg")
+    blob.download_to_filename("image1.jpg")
+
 
 def max_key(jsonData):
     max_data=0 
@@ -46,9 +67,9 @@ def detect_face(face_file, max_results=4):
         }
 
         roll = int(data[0].roll_angle + 90)
-        pan = int(data[0].pan_angle + 90)
-        tilt = int(data[0].tilt_angle + 90)
-
+        pan = int(-data[0].pan_angle + 90)
+        tilt = int((-(data[0].tilt_angle)+30)*2.3)
+        print(data[0].tilt_angle)
         send_data = {
             "emotion": max_key(emotions),
             "tilt": tilt,
@@ -60,17 +81,14 @@ def detect_face(face_file, max_results=4):
     # return data
         
 
-def main(input_filename):
-    with open(input_filename, 'rb') as image:
-        detect_face(image)
-
-
 if __name__ == "__main__":
     while True:
-        ret, frame = cam.read()
-        img_name = "opencv_frame_1.jpg"
-        cv2.imwrite(img_name, frame)
-        file_name = "/Users/shreyshah/Projects/tamumake2020/opencv_frame_1.jpg"
-        output_filename = file_name + "out" + ".jpg"
-        main(file_name)
-        time.sleep(0.33)
+        if firestore_document.get().to_dict()['start']:
+            ret, frame = cam.read()
+            img_name = "opencv_frame_1.jpg"
+            cv2.imwrite(img_name, frame)
+            file_name = "/Users/shreyshah/Projects/tamumake2020/opencv_frame_1.jpg"
+            with open(file_name, 'rb') as image:
+                detect_face(image)
+            upload_blob()
+            time.sleep(0.33)
