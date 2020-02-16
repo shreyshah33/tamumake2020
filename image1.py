@@ -9,7 +9,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
         
-
+cam = cv2.VideoCapture(0)
 
 likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY')
 
@@ -67,6 +67,9 @@ def main(input_filename):
 
 if __name__ == "__main__":
     while True:
+        ret, frame = cam.read()
+        img_name = "opencv_frame_1.jpg"
+        cv2.imwrite(img_name, frame)
         file_name = "/Users/shreyshah/Projects/tamumake2020/opencv_frame_1.jpg"
         output_filename = file_name + "out" + ".jpg"
         main(file_name)

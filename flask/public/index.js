@@ -1,25 +1,26 @@
-
-function startImageUpdate(){
-    const UPDATE_TIME = 1000;
+function startImageUpdate() {
+    const UPDATE_TIME = 100;
 
     async function changeImage() {
-        const emotions = ['joy', 'suprise', 'angry', 'sorrow'];
+        const emotions = ["joy", "surprise", "angry", "sorrow"];
 
-        const emotion_call = await fetch('/api/emotion')
+        var emotion_call = await fetch("/api/emotion");
 
-        let targetEmotion = 'joy';
+        let targetEmotion = "joy";
 
-        if(emotion_call.ok){
-            targetEmotion = (await emotion_call.json()).emotion;
+        if (emotion_call.ok) {
+            var emo = await emotion_call.json();
+            targetEmotion = emo.emotion;
+            console.log(emo.emotion);
         }
 
         for (let emotion of emotions) {
-            if(emotion !== targetEmotion){
-                document.querySelector(`#${emotion}`).className = 'hide_emotion';
+            if (emotion !== targetEmotion) {
+                document.querySelector(`#${emotion}`).className = "hide_emotion";
             }
         }
 
-        document.querySelector(`#${targetEmotion}`).className = 'target_emotion';
+        document.querySelector(`#${targetEmotion}`).className = "target_emotion";
     }
 
     changeImage();
